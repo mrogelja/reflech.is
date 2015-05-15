@@ -30,3 +30,35 @@ body {
   color: #000;
   padding: 0.2em 0;
 }
+
+.Page{
+  padding: 20px;
+}
+
+header{
+  h1{
+    text-align: center;
+  }
+}
+
+.CentralBox{
+  width: 960px;
+  margin: 50px auto;
+  text-align: center;
+}
+
+.SubjectsStarter{
+  &-separator{
+    margin: 20px 0;
+    text-align: center;
+  }
+}
+
+.Separator{
+  &-text{
+    padding: 7px;
+    border: 1px solid #aaa;
+    border-radius: 60px;
+  }
+}
+

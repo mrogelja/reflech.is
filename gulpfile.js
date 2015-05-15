@@ -18,7 +18,8 @@ var bundler = {
       entries: ['./app/scripts/app.js'],
       insertGlobals: true,
       cache: {},
-      packageCache: {}
+      packageCache: {},
+      paths: ['./app/scripts']
     }));
   },
   bundle: function() {
@@ -49,7 +50,9 @@ gulp.task('styles', function() {
 
 gulp.task('scripts', function() {
   bundler.init();
-  return bundler.bundle();
+  return bundler
+    .bundle()
+    ;
 });
 
 gulp.task('html', function() {
@@ -89,7 +92,7 @@ gulp.task('serve', function() {
   gulp.src('dist')
     .pipe($.webserver({
       livereload: true,
-      port: 9000
+      port: 3000
     }));
 });
 

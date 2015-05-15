@@ -2,6 +2,10 @@
   "name": "reflechis",
   "version": "0.0.0",
   "dependencies": {
+    "react-router": "~0.13.3",
+    "fluxible": "~0.4.8",
+    "es6-class-mixin": "~1.0.2",
+    "react-bootstrap": "0.22.3"
   },
   "devDependencies": {
     "babel-jest": "^5.0.1",
