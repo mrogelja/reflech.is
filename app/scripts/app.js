@@ -1,23 +1,14 @@
 import Router from 'react-router';
 import React from 'react';
-import Application from 'components/Application.react.js';
+import routes from 'routes.jsx';
+import Iso  from 'iso';
+import alt from './alt';
 
-import SubjectsStarter from 'components/SubjectsStarter.react.js';
-import SubjectCreatePanel from 'components/SubjectCreatePanel.react.js';
-import SubjectSearchPanel from 'components/SubjectSearchPanel.react.js';
+Iso.bootstrap(function(state, _, container){
+  alt.bootstrap(state);
 
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
-
-var routes = (
-  <Route name="home" path="/" handler={Application}>
-    <Route name="create" handler={SubjectCreatePanel}/>
-    <Route name="search" handler={SubjectSearchPanel}/>
-
-    <DefaultRoute handler={SubjectsStarter}/>
-  </Route>
-);
-
-Router.run(routes, function (Handler) {
-  React.render(<Handler/>, document.getElementById('app'));
+  Router.run(routes, Router.HistoryLocation, function (Handler) {
+    React.render(<Handler/>, document.getElementById('app'));
+  });
 });
+

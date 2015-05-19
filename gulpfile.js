@@ -8,6 +8,7 @@ var browserify = require('browserify');
 var watchify   = require('watchify');
 var source     = require('vinyl-source-stream');
 var path       = require('path');
+var server     = $.express;
 
 require('harmonize')();
 
@@ -55,6 +56,12 @@ gulp.task('scripts', function() {
     ;
 });
 
+gulp.task('bower', function () {
+  return gulp.src(['app/bower_components/**'])
+    .pipe(gulp.dest('dist/bower_components/'))
+    .pipe($.size());
+});
+
 gulp.task('html', function() {
   var assets = $.useref.assets();
   return gulp.src('app/*.html')
@@ -89,11 +96,7 @@ gulp.task('extras', function () {
 });
 
 gulp.task('serve', function() {
-  gulp.src('dist')
-    .pipe($.webserver({
-      livereload: true,
-      port: 3000
-    }));
+  server.run(['./server_bootstrap.js']);
 });
 
 gulp.task('jest', function () {
@@ -127,7 +130,7 @@ gulp.task('minify', ['minify:js', 'minify:css']);
 
 gulp.task('clean', del.bind(null, 'dist'));
 
-gulp.task('bundle', ['html', 'styles', 'scripts', 'images', 'fonts', 'extras']);
+gulp.task('bundle', ['html', 'styles', 'scripts', 'images', 'fonts', 'extras', 'bower']);
 
 gulp.task('clean-bundle', sync(['clean', 'bundle']));
 
@@ -147,4 +150,9 @@ gulp.task('watch', sync(['clean-bundle', 'serve']), function() {
   gulp.watch('app/styles/**/*.scss', ['styles']);
   gulp.watch('app/images/**/*', ['images']);
   gulp.watch('app/fonts/**/*', ['fonts']);
+
+  gulp.watch('dist/**/*.js', server.notify);
+  gulp.watch('dist/**/*.css', function(event){
+    server.notify(event);
+  });
 });
