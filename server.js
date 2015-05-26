@@ -6,15 +6,39 @@ var express = require('express'),
   React = require('react'),
   path  = require('path'),
   Iso   = require('iso'),
-  alt   = require('./app/scripts/alt.js');
+  alt   = require('./app/scripts/alt.js'),
+  mongoose = require('mongoose'),
+  fs = require('fs'),
+  bodyParser = require('body-parser');
 
 var app  = express();
 var port = 3000;
+
+mongoose.connect('mongodb://localhost/reflech_is');
+mongoose.connection.on("error", function (err) {
+  console.log(err);
+});
+
+/**
+ * Load the models
+ */
+var modelsPath = path.join(__dirname, 'api/models');
+fs.readdirSync(modelsPath).forEach(function (file) {
+  if (~file.indexOf("js")) {
+    require(modelsPath + "/" + file);
+  }
+});
+
+
+var apiRoutes = require('./api/routes');
 
 // Activer le livereload pour le server de développement.
 if(process.env.NODE_ENV != 'production') {
   app.use(require('connect-livereload')());
 }
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.engine('handlebars', exphbs({
   defaultLayout: 'main'
@@ -26,20 +50,38 @@ app.disable('etag');
 
 app.use('/', express.static(path.join(__dirname, 'dist')));
 
+app.use('/api', apiRoutes);
+
+var SubjectsFetcher = require('./app/scripts/utils/SubjectsFetcher');
+
+/*app.use(function(req, res, next) {
+
+});*/
+
 app.use(function(req, res, next) {
-  alt.bootstrap(JSON.stringify(res.locals.data || {}));
 
-  var iso = new Iso();
+  SubjectsFetcher.fetch().then((subjects) => {
+    let data = {
+      SubjectStore:  subjects
+    };
 
-  Router.run(routes, req.url, function(Handler, state) {
-    var content = React.renderToString(React.createElement(Handler));
+    alt.bootstrap(JSON.stringify(data));
 
-    iso.add(content, alt.flush());
+    var iso = new Iso();
 
-    return res.render('index', {
-      markup: iso.render()
+    Router.run(routes, req.url, function (Handler, state) {
+      var content = React.renderToString(React.createElement(Handler));
+
+      iso.add(content, alt.flush());
+
+      return res.render('index', {
+        markup: iso.render()
+      });
     });
-  });
+
+  }).catch((e) => { res.send(e.stack); });
+
+
 });
 
 var server = http.createServer(app).listen(port, function() {

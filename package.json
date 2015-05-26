@@ -3,14 +3,20 @@
   "version": "0.0.0",
   "dependencies": {
     "alt": "^0.16.5",
+    "body-parser": "^1.12.4",
     "connect-livereload": "^0.5.3",
     "express": "~4.9.7",
     "express-handlebars": "~1.1.0",
+    "fs": "0.0.2",
     "iso": "^4.1.0",
+    "mongoose": "^4.0.3",
+    "mongoose-text-search": "0.0.2",
     "node-jsx": "^0.13.3",
     "react": "^0.13.2",
     "react-bootstrap": "0.22.3",
-    "react-router": "~0.13.3"
+    "react-resolver": "^1.1.7",
+    "react-router": "~0.13.3",
+    "superagent": "^1.2.0"
   },
   "devDependencies": {
     "babel-jest": "^5.0.1",

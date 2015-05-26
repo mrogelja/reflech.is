@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from 'react-router';
-import {Input, Glyphicon} from 'react-bootstrap'
+import {Input, Glyphicon} from 'react-bootstrap';
+import SubjectsList from './SubjectsList.react.js';
 
 var Link = Router.Link;
 var Navigation = Router.Navigation;
@@ -27,12 +28,14 @@ export default class SubjectsStarter extends React.Component{
         <div>
           <Input type='text' onFocus={ this._onSearchFocus } placeholder="Chercher un sujet existant." addonAfter={searchGlyph}/>
         </div>
+
+        <SubjectsList subjects={this.props.subjects} />
       </div>
     );
   }
 
   _onSearchFocus(event){
-    this.router.replaceWith('search');
+    this.router.transitionTo('search');
   }
 };
 

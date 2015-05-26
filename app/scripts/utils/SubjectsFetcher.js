@@ -1,37 +1,40 @@
-var mockData = [
-  { id: 0, name: 'Abu Dhabi' },
-  { id: 1, name: 'Berlin' },
-  { id: 2, name: 'Bogota' },
-  { id: 3, name: 'Buenos Aires' },
-  { id: 4, name: 'Cairo' },
-  { id: 5, name: 'Chicago' },
-  { id: 6, name: 'Lima' },
-  { id: 7, name: 'London' },
-  { id: 8, name: 'Miami' },
-  { id: 9, name: 'Moscow' },
-  { id: 10, name: 'Mumbai' },
-  { id: 11, name: 'Paris' },
-  { id: 12, name: 'San Francisco' }
-];
+import superagent from "superagent";
 
 class SubjectsFetcher {
-  fetch() {
+  fetch(filter) {
     return new Promise(function(resolve, reject) {
-      setTimeout(function(){
-        resolve(mockData)
-      }, 250);
+      var queryParams = filter ? '?q=' + filter : '';
+      superagent.get('http://localhost:3000/api/subjects' + queryParams)
+      .end(function(err, res){
+          if(res.ok) {
+            resolve(res.body);
+          } else {
+            reject(err);
+          }
+        });
+    });
+  }
+
+  get(subject) {
+    return new Promise(function(resolve, reject) {
+      superagent.get('http://localhost:3000/api/subjects/' + subject._id)
+        .end(function(err, res){
+          if(res.ok) {
+            resolve(res.body);
+          }
+        });
     });
   }
 
   add(subject) {
     return new Promise(function(resolve, reject) {
-      setTimeout(function(){
-        mockData.push({
-          name: subject.name
+      superagent.post('http://localhost:3000/api/subjects')
+        .send(subject)
+        .end(function(err, res){
+          if(res.ok) {
+            resolve(res.body);
+          }
         });
-
-        resolve(mockData)
-      }, 250);
     });
   }
 }

@@ -10,8 +10,8 @@ class SubjectsActions {
 
   createSubject(subject) {
     SubjectsFetcher.add(subject)
-      .then((subjects) => {
-        this.actions.updateSubjects(subjects);
+      .then(() => {
+        this.actions.fetchSubjects();
       })
       .catch((error) => {
         this.actions.subjectsFailed(error);
@@ -22,10 +22,8 @@ class SubjectsActions {
     this.dispatch(subjects);
   }
 
-  fetchSubjects() {
-    this.dispatch();
-
-    SubjectsFetcher.fetch()
+  fetchSubjects(filter) {
+    SubjectsFetcher.fetch(filter)
       .then((subjects) => {
         this.actions.updateSubjects(subjects);
       })
@@ -36,6 +34,10 @@ class SubjectsActions {
 
   fetchSubjectsFailed() {
     this.dispatch(error);
+  }
+
+  selectSubject(subject) {
+    this.dispatch(subject);
   }
 }
 
